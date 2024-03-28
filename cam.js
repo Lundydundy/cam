@@ -11,8 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await worker.recognize(image.files[0]);
         console.log("result", result)
         const imageWords = result.data.text.toLowerCase();
-        console.log(imageWords.split(" "))
-
         allergies.forEach((allergy) => {
             imageWords.includes(allergy) ? found.push(allergy) : ""
         })
