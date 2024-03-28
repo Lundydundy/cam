@@ -3,14 +3,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = document.getElementById("result");
     const allergies = ["wheat", "barley", "rye", "gluten"]
     const worker = await Tesseract.createWorker();
-    console.log(image)
     image.onchange = async () => {
         let found = [];
         console.log(image.files)
         console.log("change")
         document.querySelector("#picture").src = URL.createObjectURL(image.files[0])
-
         const result = await worker.recognize(document.querySelector("#picture").src);
+        console.log("result", result)
         const imageWords = result.data.text.toLowerCase();
         console.log(imageWords.split(" "))
 
