@@ -3,14 +3,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = document.getElementById("result");
     const allergies = ["wheat", "barley", "rye", "gluten"]
     const worker = await Tesseract.createWorker();
-
+    console.log(image)
     image.onchange = async () => {
         let found = [];
+        console.log(image.files)
         console.log("change")
         document.querySelector("#picture").src = URL.createObjectURL(image.files[0])
-        const result = await worker.recognize(image.files[0]);
+
+        const result = await worker.recognize(document.querySelector("#picture").src);
         const imageWords = result.data.text.toLowerCase();
-        console.log(imageWords)
+        console.log(imageWords.split(" "))
 
         allergies.forEach((allergy) => {
             imageWords.includes(allergy) ? found.push(allergy) : ""
@@ -18,6 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         console.log(found)
 
-        res.value = found.length > 0 ? `Item has or may have ${found}.`: "No Allergies";
+        res.value = found.length > 0 ? `Item has or may have ${found}.` : "No Allergies";
     }
 })
