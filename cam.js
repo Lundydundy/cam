@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const result = await worker.recognize(document.querySelector("#picture"));
         console.log("result", result)
         const imageWords = result.data.text.toLowerCase();
+        console.log(imageWords)
         allergies.forEach((allergy) => {
             imageWords.includes(allergy) ? found.push(allergy) : ""
         })
