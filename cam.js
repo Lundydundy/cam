@@ -3,32 +3,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = document.getElementById("result");
     const allergies = ["wheat", "barley", "rye", "gluten"]
     const worker = await Tesseract.createWorker();
-    const trie = new Trie()
     
     image.onchange = async () => {
-        console.time()
-        document.querySelector("#picture").src = URL.createObjectURL(image.files[0])
+        const trie = new Trie()
+        document.querySelector(".loader").style.display = "block"
         
         const result = await worker.recognize(image.files[0], {
             oem: 1
         });
         
-        // const imageWords = result.data.words.map((word) => {
-        //     return word.text.toLowerCase()
-        // })
-
-        for(let i = 0; i < result.data.words.length; i++) {
-            trie.insert(result.data.words[i].text.toLowerCase())
-        }
-        // result.data.words.forEach(word => {
-        //     trie.insert(word.text.toLowerCase())
-        // })
-
-        // const found = allergies.filter(allergy => imageWords.includes(allergy));
-        const found = allergies.filter(allergy => trie.search(allergy));
+        console.log(result)
         
-        res.value = found.length > 0 ? `Item has or may have ${found}.` : "No Allergies";
-        console.timeEnd()
+        for(let i = 0; i < result.data.words.length; i++) {
+            trie.insert(result.data.words[i].text.toLowerCase(), result.data.words[i].bbox)
+        }
+        const found = allergies.filter(allergy => trie.search(allergy));
+        document.querySelector(".loader").style.display = "none"
+        document.querySelector("#picture").src = URL.createObjectURL(image.files[0])
+        res.innerHTML = found.length > 0 ? `Item has or may have${found.map((word) => ` ${word}`)}.` : "No Allergies";
     }
 })
 
@@ -37,7 +29,7 @@ class Trie {
         this.children = {};
     }
 
-    insert(word) {
+    insert(word, box) {
         let curr = this.children;
         for (let i = 0; i < word.length; i++) {
             if (curr[word[i]]) {
@@ -47,6 +39,7 @@ class Trie {
             }
         }
         curr["isWord"] = true;
+        curr["box"] = box;
     }
 
     search(word) {
