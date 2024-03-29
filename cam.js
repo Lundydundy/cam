@@ -5,24 +5,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const worker = await Tesseract.createWorker();
     
     image.onchange = async () => {
-        let found = [];
         console.log(image.files)
-        console.log("change")
         document.querySelector("#picture").src = URL.createObjectURL(image.files[0])
         
         const result = await worker.recognize(image.files[0], {
             oem: 1
         });
         
-        console.log("result", result)
         const imageWords = result.data.text.toLowerCase();
-        console.log(imageWords)
-        allergies.forEach((allergy) => {
-            imageWords.includes(allergy) ? found.push(allergy) : ""
-        })
-
-        console.log(found)
-
+        const found = allergies.filter(allergy => imageWords.includes(allergy));
         res.value = found.length > 0 ? `Item has or may have ${found}.` : "No Allergies";
     }
 })
