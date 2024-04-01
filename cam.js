@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector(".loader").style.display = "block"
         
         const result = await worker.recognize(image.files[0], {
+            tessedit_char_blacklist: '0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~', // Ignore numbers and special characters
             oem: 1
         });
         
