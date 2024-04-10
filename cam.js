@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#picture").style.display = "block";
         const canvas = document.createElement('canvas');
         canvas.className = "canvasImg"
-        canvas.style.width = "300px";
-        canvas.style.height = "400px";
+        canvas.style.maxWidth = "300px";
+        canvas.style.maxHeight = "400px";
 
         document.querySelectorAll(".bounding-box").forEach((element) => {
             element.remove();
@@ -91,3 +91,4 @@ class Trie {
         return curr["isWord"] ? [true, curr.box] : false;
     }
 }
+
