@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             checkForCanvas();
             const canvas = createCanvas();
 
-            document.querySelector("#result").style.display = "none"
+            res.style.display = "none"
             document.querySelector(".loader").style.display = "block"
 
             const result = await worker.recognize(displayImg, {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
 
             const allergens = retrieveFoundAllergens(result, trie);
-            document.querySelector("#result").style.display = "block"
+            res.style.display = "block"
             document.querySelector(".loader").style.display = "none";
             createBoxes(canvas, allergens.boxes);
 
