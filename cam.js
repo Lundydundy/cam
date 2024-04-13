@@ -19,22 +19,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             res.style.display = "none";
             document.querySelector(".loader").style.display = "block";
 
-            let result = await worker.recognize(displayImg, {
-                tessedit_char_blacklist: '0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~', // Ignore numbers and special characters
-                oem: 1
-            });
-
-            const newImg = cv.imread(imgfile)
+            const newImg = await cv.imread(imgfile)
             cv.imshow(canvas, newImg);
-            console.log("second");
 
-            result = await worker.recognize(canvas.toDataURL(), {
+            const result = await worker.recognize(canvas.toDataURL(), {
                 tessedit_char_blacklist: '0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~', // Ignore numbers and special characters
                 oem: 1
             });
-
-            console.log("complete");
-
 
             const allergens = retrieveFoundAllergens(result, trie);
             res.style.display = "block"
@@ -91,6 +82,12 @@ async function loadImage(filename) {
     imgfile.id = "fileimg";
     document.body.appendChild(imgfile)
     imgfile.style.display = "none"
+
+    await new Promise((resolve, reject) => {
+        imgfile.onload = resolve;
+        imgfile.onerror = reject;
+    });
+
     return imgfile;
 }
 function checkForCanvas() {
