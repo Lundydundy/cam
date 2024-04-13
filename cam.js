@@ -6,22 +6,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     localStorage.setItem("allergens", allergies);
     const worker = await Tesseract.createWorker();
     const trie = createTrie(allergies);
+    document.querySelector(".allergens").innerHTML = `Checking for ${allergies.map((allergy) => ` ${allergy}`)}`;
 
     image.onchange = async () => {
 
-        const imgfile = loadImage(image);
+        const imgfile = await loadImage(image);
 
         if (imgfile) {
             checkForCanvas();
             const canvas = createCanvas();
 
-            res.style.display = "none"
-            document.querySelector(".loader").style.display = "block"
+            res.style.display = "none";
+            document.querySelector(".loader").style.display = "block";
 
-            const result = await worker.recognize(displayImg, {
+            let result = await worker.recognize(displayImg, {
                 tessedit_char_blacklist: '0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~', // Ignore numbers and special characters
                 oem: 1
             });
+
+            const newImg = cv.imread(imgfile)
+            cv.imshow(canvas, newImg);
+            console.log("second");
+
+            result = await worker.recognize(canvas.toDataURL(), {
+                tessedit_char_blacklist: '0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~', // Ignore numbers and special characters
+                oem: 1
+            });
+
+            console.log("complete");
+
 
             const allergens = retrieveFoundAllergens(result, trie);
             res.style.display = "block"
@@ -63,13 +76,6 @@ class Trie {
         return curr["isWord"];
     }
 }
-
-function checkForCanvas() {
-    if (document.querySelector(".canvasImg")) {
-        document.querySelector(".canvasImg").remove()
-    }
-}
-
 function createTrie(allergies) {
     const trie = new Trie()
     allergies.forEach((allergy) => {
@@ -77,8 +83,7 @@ function createTrie(allergies) {
     })
     return trie;
 }
-
-function loadImage(filename) {
+async function loadImage(filename) {
     if (!filename) return null;
     document.querySelector("#picture").src = URL.createObjectURL(filename.files[0]);
     const imgfile = document.createElement('img')
@@ -88,7 +93,19 @@ function loadImage(filename) {
     imgfile.style.display = "none"
     return imgfile;
 }
-
+function checkForCanvas() {
+    if (document.querySelector(".canvasImg")) {
+        document.querySelector(".canvasImg").remove()
+    }
+}
+function createCanvas() {
+    document.querySelector("#picture").style.display = "block";
+    const canvas = document.createElement('canvas');
+    canvas.className = "canvasImg"
+    canvas.style.maxWidth = "350px";
+    canvas.style.maxHeight = "400px";
+    return canvas;
+}
 function retrieveFoundAllergens(result, trie) {
 
     const found = new Set();
@@ -104,7 +121,6 @@ function retrieveFoundAllergens(result, trie) {
 
     return { found: found, boxes: boxes }
 }
-
 function createBoxes(canvas, boxes) {
     const cvimg = cv.imread("fileimg");
     boxes.forEach(box => {
@@ -117,13 +133,3 @@ function createBoxes(canvas, boxes) {
         cv.imshow(canvas, cvimg)
     });
 }
-
-function createCanvas() {
-    document.querySelector("#picture").style.display = "block";
-    const canvas = document.createElement('canvas');
-    canvas.className = "canvasImg"
-    canvas.style.maxWidth = "300px";
-    canvas.style.maxHeight = "400px";
-    return canvas;
-}
-

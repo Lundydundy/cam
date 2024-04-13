@@ -24,7 +24,7 @@
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
 
-        canvas{
+        canvas {
             border: 1px solid black;
         }
 
@@ -54,7 +54,7 @@
             margin-bottom: 0;
         }
 
-        nav div{
+        nav div {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -72,7 +72,7 @@
             margin: 0 0 0 0;
         }
 
-        li{
+        li {
             list-style-type: none;
             padding: 10px;
             font-size: clamp(20px, 1.5vw, 40px);
@@ -112,7 +112,7 @@
             </a>
             <div>
                 <ul class="nav-items">
-                    <li><a href="#">About</a></li>        
+                    <li><a href="#">About</a></li>
                     <li><a href="#">Allergens</a></li>
                 </ul>
             </div>
@@ -120,17 +120,18 @@
     </header>
     <h6 style="padding: 1%; width: 60%; max-width: 400px; text-align: center;" id="result">Take a picture of ingredients
         to see if allergens are present</h6>
-        <div class="loader"></div>
-        <div class="image-div"
+    <div class="loader"></div>
+    <div class="image-div"
         style="width: 300px; height: 400px; position: relative; justify-content: center; display: flex; background-color: rgba(0,0,0, 0.03);">
         <img style="width:100%; height:100%; object-fit: contain; max-height: 450px; max-width: 400px;" id="picture">
     </div>
     <div>
         <button style="vertical-align: middle;" class="btn btn-primary"><label
-            style="cursor: pointer; display: flex; justify-content: center; align-content: center; vertical-align: middle;"
-            for="image">Capture</label></button>
-        </div>
-        <input id="image" type="file" accept="image/jpg" capture="capture" style="visibility:hidden;">
-    </body>
+                style="cursor: pointer; display: flex; justify-content: center; align-content: center; vertical-align: middle;"
+                for="image">Capture</label></button>
+    </div>
+    <p class="allergens"></p>
+    <input id="image" type="file" accept="image/jpg" capture="capture" style="visibility:hidden;">
+</body>
 
 </html>
